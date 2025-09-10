@@ -4,4 +4,6 @@ Lista de Exercícios 3 - Desenvolvimento Web Básico
 
 Atividade 4: Página de Perfil Pessoal
 
-Atividade 5: Consumo de API com ReactJS
+Atividade 5: Consumo de API com React
+
+Atividade 6: Estilização com React
