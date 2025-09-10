@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- O dark mode no Tailwind é ativado pela classe 'dark' no html -->
+<html lang="pt-br" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrine de Produtos - Tailwind CSS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Habilita o modo escuro baseado em classe
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+
+    <header class="fixed top-0 left-0 right-0 z-10 flex items-center justify-between h-[72px] px-4 sm:px-6 lg:px-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 shadow-md">
+        <div class="text-xl font-bold">Shop.</div>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" type="button" aria-label="Alternar tema" class="flex items-center justify-center w-10 h-10 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-800">
+                <!-- Icon will be inserted by JS -->
+            </button>
+            <a href="#" aria-label="Carrinho de compras com 3 itens" class="relative flex items-center justify-center w-10 h-10 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span class="absolute top-0.5 right-0.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-medium text-white bg-blue-500 rounded-full dark:text-slate-900 dark:bg-blue-400">3</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-[calc(1.5rem_+_72px)] pb-6 px-4 sm:px-6 lg:px-8">
+        <div id="product-grid" class="grid max-w-7xl mx-auto gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <!-- Products will be rendered here by JS -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = [
+                { id: 1, title: "Fone de Ouvido Sem Fio com Cancelamento de Ruído Ativo e Bateria de Longa Duração", price: "R$ 349,90", rating: 4.8, tag: "Novo", imageUrl: "https://placehold.co/400x400/e0f2fe/0c4a6e?text=Fone" },
+                { id: 2, title: "Cadeira de Escritório Ergonômica com Suporte Lombar Ajustável", price: "R$ 899,00", rating: 4.9, tag: "Promo", imageUrl: "https://placehold.co/400x400/dcfce7/14532d?text=Cadeira" },
+                { id: 3, title: "Teclado Mecânico Gamer RGB com Switches Tácteis", price: "R$ 499,50", rating: 4.7, tag: null, imageUrl: "https://placehold.co/400x400/fee2e2/991b1b?text=Teclado" },
+                { id: 4, title: "Monitor Curvo 27 polegadas 144Hz para Jogos e Produtividade", price: "R$ 1.799,99", rating: 4.6, tag: "Novo", imageUrl: "https://placehold.co/400x400/f3e8ff/581c87?text=Monitor" },
+                { id: 5, title: "Garrafa Térmica Inteligente com Display de Temperatura LED", price: "R$ 129,90", rating: 4.5, tag: "Promo", imageUrl: "https://placehold.co/400x400/fffbeb/b45309?text=Garrafa" },
+                { id: 6, title: "Mochila Executiva Anti-furto com Compartimento para Notebook", price: "R$ 250,00", rating: 4.8, tag: null, imageUrl: "https://placehold.co/400x400/e5e7eb/374151?text=Mochila" },
+            ];
+
+            const grid = document.getElementById('product-grid');
+
+            // --- Skeleton Card Template ---
+            const skeletonTemplate = `
+                <div class="rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden animate-pulse" aria-hidden="true">
+                    <div class="aspect-square bg-slate-200 dark:bg-slate-700"></div>
+                    <div class="p-4">
+                        <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-full mb-2"></div>
+                        <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-4/5 mb-4"></div>
+                        <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-6"></div>
+                        <div class="h-11 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                    </div>
+                </div>
+            `;
+
+            // --- Product Card Template ---
+            function createProductCard(product) {
+                const tagHtml = product.tag ? `<div class="absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-md bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">${product.tag}</div>` : '';
+                return `
+                    <article class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:shadow-xl dark:hover:shadow-slate-700/50 hover:-translate-y-1 transition-all duration-200 overflow-hidden" aria-labelledby="product-title-${product.id}">
+                        <div class="relative aspect-square">
+                            <img src="${product.imageUrl}" alt="Imagem de ${product.title}" loading="lazy" width="400" height="400" class="w-full h-full object-cover">
+                            ${tagHtml}
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 id="product-title-${product.id}" class="text-base font-medium text-slate-900 dark:text-white line-clamp-2 h-[3em]">${product.title}</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-lg font-bold text-blue-600 dark:text-blue-400">${product.price}</p>
+                                <div class="text-amber-500" aria-label="Avaliação de ${product.rating} de 5 estrelas">${'★'.repeat(Math.round(product.rating))}</div>
+                            </div>
+                            <div class="mt-auto pt-4">
+                                <button class="w-full h-11 inline-flex items-center justify-center rounded-md px-4 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:opacity-60 disabled:pointer-events-none bg-blue-600 text-white hover:bg-blue-700" aria-label="Adicionar ${product.title} ao carrinho">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }
+
+            function renderSkeletons() {
+                grid.innerHTML = Array(6).fill(skeletonTemplate).join('');
+            }
+
+            function renderProducts() {
+                grid.innerHTML = products.map(createProductCard).join('');
+            }
+
+            // --- Theme Toggle Logic ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+            
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeToggleBtn.innerHTML = sunIcon;
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeToggleBtn.innerHTML = moonIcon;
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+            
+            // Initial setup
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            renderSkeletons();
+            setTimeout(renderProducts, 2000);
+        });
+    </script>
+</body>
+</html>
+
